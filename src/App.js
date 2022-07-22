@@ -24,6 +24,7 @@ function App() {
     axios.post("http://localhost:3009/users", {name: userName}).then(response => {
       getUsers();
     });
+    setUserName("");
   };
 
   return (
