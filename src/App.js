@@ -7,7 +7,7 @@ function App() {
   const [userName, setUserName] = useState("");
 
   const getUsers = () => {
-    axios.get("http://localhost:3009/users").then(response => {
+    axios.get("http://localhost:3009/users" + window.location.search).then(response => {
       setUsers(response.data);
     });
   };
@@ -27,9 +27,29 @@ function App() {
     setUserName("");
   };
 
+  const updateUser = (id, name) => {
+    axios.put("http://localhost:3009/users", {id, name}).then(response => {
+      getUsers();
+    });
+    setUserName("");
+  };
+
+  const deleteUser = (id) => {
+    axios.delete(`http://localhost:3009/users/${id}`).then(response => {
+      getUsers();
+    });
+  };
+
   return (
     <div>
-      <div>{users.map(u => <p key={u.id}>{u.name}</p>)}</div>
+      <div>
+        {users.map(u =>
+          <div key={u._id}>
+            <input defaultValue={u.name} onBlur={(e) => updateUser(u._id, e.currentTarget.value)}/>
+            <button onClick={() => deleteUser(u._id)}>X</button>
+          </div>
+        )}
+      </div>
       <div>
         <input value={userName} onChange={onUserNameChange}/>
         <button onClick={addUser}>Add user</button>
